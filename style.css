@@ -1,22 +1,69 @@
-/* Your CSS from the previous step remains the same */
-/* You might want to add some styling for .review-section if needed */
-.review-section {
-    margin-top: 30px;
+body {
+    font-family: sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+    padding: 20px;
+    box-sizing: border-box;
 }
-.review-section label {
+h1 {
+    color: #333;
+    margin-bottom: 30px;
+}
+label {
     margin-bottom: 10px;
+    font-weight: bold;
+    color: #555;
 }
-.review-section textarea {
-    height: 200px; /* Make the preview textarea a bit taller */
+textarea {
+    width: 80%;
+    max-width: 600px;
+    /* Adjusted height for both textareas slightly, original was 120px */
+    height: 120px;
+    margin-bottom: 25px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    line-height: 1.5;
+    resize: vertical;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+/* Specific style for the preview textarea, making it taller and white background */
+#previewText {
+    height: 200px; /* Make the preview textarea a bit taller for review */
     background-color: #ffffff;
 }
+
+button {
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    /* Default blue for the first button */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+button:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+button:active {
+    background-color: #004085;
+    transform: translateY(0);
+}
+
+/* Styles for the new "Download Reviewed File" button */
 #downloadModifiedButton {
     background-color: #28a745; /* Green for download action */
-    margin-top: 20px;
+    margin-top: 20px; /* Space above it */
 }
 #downloadModifiedButton:hover:not(:disabled) {
     background-color: #218838;
@@ -29,4 +76,25 @@
     cursor: not-allowed;
     box-shadow: none;
     transform: none;
+}
+
+/* Styling for the review section container */
+.review-section {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+#statusMessage {
+    margin-top: 25px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    background-color: #e9ecef;
+    color: #333;
+    font-size: 0.95rem;
+    min-width: 250px;
+    text-align: center;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
 }
