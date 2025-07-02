@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modify Existing TXT File with Custom Text</title>
-    <link rel="stylesheet" href="style.css"> </head>
+    <title>Modify TXT File with Review</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 <body>
 
     <h1>Add Custom Text & Modify File</h1>
@@ -13,7 +14,14 @@
     <textarea id="addedText" placeholder="Enter text here (e.g., 'This file was processed on 2025-07-02')..."></textarea>
 
     <input type="file" id="fileInput" accept=".txt" style="display: none;">
-    <button id="selectFileButton">Select File & Download Modified</button>
+    <button id="selectFileButton">1. Select File & Generate Preview</button>
+
+    <div class="review-section">
+        <label for="previewText">Preview of Modified Content:</label>
+        <textarea id="previewText" readonly placeholder="Modified content will appear here after you select a file."></textarea>
+        <button id="downloadModifiedButton" disabled>2. Download Reviewed File</button>
+    </div>
+
     <p id="statusMessage">Awaiting file selection...</p>
 
     <script src="script.js" defer></script>
