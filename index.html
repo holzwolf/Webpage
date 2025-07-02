@@ -3,67 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My First Webpage</title>
-    <!-- Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Generate and Download TXT</title>
     <style>
-        /* Custom styles for the Inter font */
-        body {
-            font-family: "Inter", sans-serif;
-        }
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background-color: #f0f0f0; }
+        textarea { width: 80%; max-width: 500px; height: 150px; margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 5px; }
+        button:hover { background-color: #0056b3; }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-100 to-purple-200 min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center border border-gray-200">
-        <h1 class="text-4xl font-extrabold text-gray-800 mb-4">Hello from My Webpage!</h1>
-        <p class="text-lg text-gray-600 mb-6">
-            ANOTHER REFRESH. Now with a primitive calculator!
-        </p>
+<body>
 
-        <!-- Calculator Section -->
-        <div class="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-            <h2 class="text-2xl font-bold text-gray-700 mb-4">Simple Adder</h2>
-            <input type="number" id="num1" placeholder="Enter first number" class="w-full p-2 mb-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <input type="number" id="num2" placeholder="Enter second number" class="w-full p-2 mb-4 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <button id="addButton" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-5 rounded-xl shadow-md transition duration-300 ease-in-out transform hover:-translate-y-1 w-full">
-                Add Numbers
-            </button>
-            <p id="result" class="mt-4 text-xl font-semibold text-gray-800">Result: </p>
-        </div>
-
-        <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1">
-            Learn More
-        </button>
-        <p class="mt-8 text-sm text-gray-500">
-            You can see this page on your phone by opening the preview link.
-        </p>
-    </div>
+    <h1>TXT File Generator</h1>
+    <textarea id="textContent" placeholder="Enter text to save in the file..."></textarea>
+    <button onclick="downloadTxtFile()">Download TXT File</button>
 
     <script>
-        // Get references to the input fields, button, and result paragraph
-        const num1Input = document.getElementById('num1');
-        const num2Input = document.getElementById('num2');
-        const addButton = document.getElementById('addButton');
-        const resultParagraph = document.getElementById('result');
+        function downloadTxtFile() {
+            const content = document.getElementById('textContent').value; // Get content from textarea
 
-        // Add an event listener to the button
-        addButton.addEventListener('click', () => {
-            // Get the values from the input fields and convert them to numbers
-            const number1 = parseFloat(num1Input.value);
-            const number2 = parseFloat(num2Input.value);
-
-            // Check if the inputs are valid numbers
-            if (isNaN(number1) || isNaN(number2)) {
-                resultParagraph.textContent = "Result: Please enter valid numbers.";
-                return; // Exit the function if inputs are not numbers
+            if (!content) {
+                alert("Please enter some text to save!");
+                return;
             }
 
-            // Perform the addition
-            const sum = number1 + number2;
+            // 1. Create a Blob from the content
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
 
-            // Display the result
-            resultParagraph.textContent = `Result: ${sum}`;
-        });
+            // 2. Create a URL for the Blob
+            const url = URL.createObjectURL(blob);
+
+            // 3. Create a temporary <a> element
+            const a = document.createElement('a');
+
+            // 4. Set href and download attributes
+            a.href = url;
+            a.download = 'my_generated_results.txt'; // The default filename for the download
+
+            // 5. Programmatically click the link to trigger download
+            document.body.appendChild(a); // Append to body is good practice, though sometimes not strictly necessary
+            a.click();
+
+            // Clean up: Revoke the object URL to free up memory
+            document.body.removeChild(a); // Remove the temporary link
+            URL.revokeObjectURL(url);
+        }
     </script>
+
 </body>
 </html>
