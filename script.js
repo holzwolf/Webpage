@@ -1,4 +1,4 @@
-// Function to handle the download process
+// Function to handle the download process (reused)
 function downloadModifiedFile(content, filename) {
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
@@ -13,33 +13,38 @@ function downloadModifiedFile(content, filename) {
     URL.revokeObjectURL(url);
 }
 
-// Get references to HTML elements once the DOM is loaded
-// We use DOMContentLoaded or defer in the script tag to ensure elements exist
 document.addEventListener('DOMContentLoaded', () => {
     const fileInput = document.getElementById('fileInput');
     const selectFileButton = document.getElementById('selectFileButton');
-    const statusMessage = document.getElementById('statusMessage');
     const addedTextarea = document.getElementById('addedText');
+    const previewTextarea = document.getElementById('previewText'); // New: Preview textarea
+    const downloadModifiedButton = document.getElementById('downloadModifiedButton'); // New: Download button
+    const statusMessage = document.getElementById('statusMessage');
 
-    // Attach event listener to the button
+    let currentFileName = ''; // To store the original file name for download
+
+    // 1. Event listener for the "Select File & Generate Preview" button
     selectFileButton.addEventListener('click', () => {
         fileInput.click(); // Programmatically click the hidden file input
     });
 
-    // Attach event listener to the file input (when a file is selected)
+    // 2. Event listener for when a file is selected in the file input
     fileInput.addEventListener('change', function(event) {
-        const file = event.target.files[0]; // Get the selected file
-        const customTextToAdd = addedTextarea.value; // Get the user's custom text
+        const file = event.target.files[0];
+        currentFileName = file ? file.name : ''; // Store the file name
 
         if (!file) {
             statusMessage.textContent = "No file selected. Please choose a .txt file.";
+            previewTextarea.value = ''; // Clear preview
+            downloadModifiedButton.disabled = true; // Disable download button
             return;
         }
 
         if (!file.name.toLowerCase().endsWith('.txt')) {
             statusMessage.textContent = "Error: Please select a .txt file.";
-            // Clear the input so the same file can be selected again if needed
-            event.target.value = '';
+            previewTextarea.value = ''; // Clear preview
+            downloadModifiedButton.disabled = true; // Disable download button
+            event.target.value = ''; // Clear input for re-selection
             return;
         }
 
@@ -48,26 +53,50 @@ document.addEventListener('DOMContentLoaded', () => {
         const reader = new FileReader();
 
         reader.onload = function(e) {
-            const originalContent = e.target.result; // The content of the original file
+            const originalContent = e.target.result;
+            const customTextToAdd = addedTextarea.value; // Get text from first textarea
 
-            // --- Modification Logic: Combine custom text with original content ---
-            const modifiedContent = customTextToAdd + "\n\n" + originalContent; // Add two newlines for separation
+            // --- Modification Logic ---
+            const modifiedContent = customTextToAdd + "\n\n" + originalContent;
 
-            // --- Offer the modified content for download ---
-            const newFileName = file.name.replace(/(\.txt)$/i, '_modified$1'); // e.g., mydoc.txt -> mydoc_modified.txt
-            downloadModifiedFile(modifiedContent, newFileName);
-            statusMessage.textContent = `"${newFileName}" is ready for download!`;
+            // Display the modified content in the preview textarea
+            previewTextarea.value = modifiedContent;
+            statusMessage.textContent = `Preview generated for "${file.name}". Review and download.`;
 
-            // Clear the input value so selecting the same file again triggers change event
-            event.target.value = ''; // Resets the file input
+            // Enable the download button now that content is ready for review
+            downloadModifiedButton.disabled = false;
+
+            event.target.value = ''; // Clear input to allow re-selection of the same file
         };
 
         reader.onerror = function(e) {
             console.error("Error reading file:", e.target.error);
             statusMessage.textContent = "Error reading the file. Please try again.";
+            previewTextarea.value = '';
+            downloadModifiedButton.disabled = true;
             event.target.value = '';
         };
 
         reader.readAsText(file); // Read the file as text
+    });
+
+    // 3. New event listener for the "Download Reviewed File" button
+    downloadModifiedButton.addEventListener('click', () => {
+        const contentToDownload = previewTextarea.value; // Get content from the preview textarea
+
+        if (!contentToDownload) {
+            alert("No content to download. Please select a file and generate a preview first.");
+            return;
+        }
+
+        // Suggest a new name based on the original file name
+        const suggestedFileName = currentFileName ? currentFileName.replace(/(\.txt)$/i, '_reviewed.txt') : 'modified_file.txt';
+
+        downloadModifiedFile(contentToDownload, suggestedFileName);
+        statusMessage.textContent = `"${suggestedFileName}" downloaded!`;
+        
+        // Optionally clear preview and disable button after download
+        previewTextarea.value = '';
+        downloadModifiedButton.disabled = true;
     });
 });
