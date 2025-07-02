@@ -4,73 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modify Existing TXT File with Custom Text</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 30px;
-        }
-        label {
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: #555;
-        }
-        textarea {
-            width: 80%;
-            max-width: 600px;
-            height: 120px;
-            margin-bottom: 25px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 1rem;
-            line-height: 1.5;
-            resize: vertical;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-        }
-        button {
-            padding: 12px 25px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            background-color: #007bff; /* Blue for the main action */
-            color: white;
-            border: none;
-            border-radius: 8px;
-            transition: background-color 0.3s ease, transform 0.1s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        button:hover {
-            background-color: #0056b3;
-            transform: translateY(-1px);
-        }
-        button:active {
-            background-color: #004085;
-            transform: translateY(0);
-        }
-        #statusMessage {
-            margin-top: 25px;
-            padding: 10px 15px;
-            border-radius: 5px;
-            background-color: #e9ecef;
-            color: #333;
-            font-size: 0.95rem;
-            min-width: 250px;
-            text-align: center;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
-        }
-    </style>
-</head>
+    <link rel="stylesheet" href="style.css"> </head>
 <body>
 
     <h1>Add Custom Text & Modify File</h1>
@@ -79,40 +13,10 @@
     <textarea id="addedText" placeholder="Enter text here (e.g., 'This file was processed on 2025-07-02')..."></textarea>
 
     <input type="file" id="fileInput" accept=".txt" style="display: none;">
-    <button onclick="triggerFileSelection()">Select File & Download Modified</button>
+    <button id="selectFileButton">Select File & Download Modified</button>
     <p id="statusMessage">Awaiting file selection...</p>
 
-    <script>
-        function triggerFileSelection() {
-            document.getElementById('fileInput').click();
-        }
+    <script src="script.js" defer></script>
 
-        document.getElementById('fileInput').addEventListener('change', function(event) {
-            const file = event.target.files[0]; // Get the selected file
-            const statusMessage = document.getElementById('statusMessage');
-            const customTextToAdd = document.getElementById('addedText').value; // Get the user's custom text
-
-            if (!file) {
-                statusMessage.textContent = "No file selected. Please choose a .txt file.";
-                return;
-            }
-
-            if (!file.name.toLowerCase().endsWith('.txt')) {
-                statusMessage.textContent = "Error: Please select a .txt file.";
-                // Clear the input so the same file can be selected again if needed
-                event.target.value = '';
-                return;
-            }
-
-            statusMessage.textContent = `Reading "${file.name}"...`;
-
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-                const originalContent = e.target.result; // The content of the original file
-
-                // --- Modification Logic: Combine custom text with original content ---
-                const modifiedContent = customTextToAdd + "\n\n" + originalContent; // Add two newlines for separation
-
-                // --- Offer the modified content for download ---
-                //
+</body>
+</html>
